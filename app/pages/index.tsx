@@ -1,6 +1,27 @@
+import { useEffect, useState } from 'react';
+import { CreateUserCommand, UsersClient } from '@/api-client';
 import Image from 'next/image';
 
+import { BASE_API_URL } from '../config';
+
 const Index = () => {
+  const [usersClient, setUsersClient] = useState<UsersClient | undefined>(undefined);
+  const [name, setName] = useState<string>();
+  const [email, setEmail] = useState<string>();
+
+  useEffect(() => {
+    (async () => {
+      setUsersClient(new UsersClient(BASE_API_URL));
+    })();
+  }, []);
+
+  const handleRegistration = async () => {
+    if (usersClient) {
+      const user = await usersClient.createUser(new CreateUserCommand({ name, email }));
+      console.log(user);
+    }
+  }
+
   return (
     <main className="py-32 md:p-32 lg:p-40">
       <Image src='/stanley-dai-ovanKMhLYec-unsplash.jpg' alt="GIG BABY" width={2000} height={350} className='h-[200px] lg:h-[350px]'style={{position: 'absolute', left: 0, top: 0, objectFit: 'cover', zIndex: -10}}/>
@@ -16,13 +37,14 @@ const Index = () => {
       <div className="flex flex-col align-middle py-5 px-10 gap-3">
         <div className="flex flex-col justify-center w-full self-center lg:max-w-[468px]">
           <label>Name</label>
-          <input type="text" className="p-2 shadow-lg rounded-sm outline-none"/>
+          <input type="text" className="p-2 shadow-lg rounded-sm outline-none" value={name} onChange={(e) => setName(e.target.value)}/>
         </div>
         <div className="flex flex-col justify-center w-full self-center lg:max-w-[468px]">
           <label>Email</label>
-          <input type="text" className="p-2 shadow-lg rounded-sm outline-none"/>
+          <input type="text" className="p-2 shadow-lg rounded-sm outline-none" value={email} onChange={(e) => setEmail(e.target.value)}/>
         </div>
-        <button className="bg-pink-300 rounded-md py-2 px-5 text-center flex self-center m-5 shadow-md hover:bg-pink-400">Sign Up</button>
+        <button className="bg-pink-300 rounded-md py-2 px-5 text-center flex self-center m-5 shadow-md hover:bg-pink-400"
+          onClick={() => handleRegistration()}>Sign Up</button>
       </div>
       <div className='text-center py-10 '>
         <p>Let's link up!</p>
