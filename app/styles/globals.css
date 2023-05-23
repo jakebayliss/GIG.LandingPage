@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
+  --background-start-rgb: 226, 250, 255;
   --background-end-rgb: 255, 255, 255;
 }
 
@@ -31,10 +31,11 @@ body {
   src: url("../assets/VAL.otf") format("opentype");
 }
 
-.launch-title {
+.val {
   font-family: 'VAL';
-  font-size: 40px;
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: black;
-  color: transparent;
+}
+
+.launch-title {
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: white;
 }
