@@ -6,8 +6,8 @@ namespace Application.Users.Commands.CreateUser
 {
 	public class CreateUserCommand : IRequest<User>
 	{
-		public Guid UserId { get; set; }
-		public string DisplayName { get; set; }
+		public string Name { get; set; }
+		public string Email { get; set; }
 	}
 	public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, User>
 	{
@@ -22,30 +22,12 @@ namespace Application.Users.Commands.CreateUser
 		{
 			var user = new User
 			{
-				UserId = command.UserId,
-				DisplayName = command.DisplayName
+				Name = command.Name,
+				Email = command.Email,
+				CreatedOn = DateTime.Now
 			};
 			_context.Users.Add(user);
 			await _context.SaveChangesAsync(cancellationToken);
-
-			var now = DateTime.Now;
-			await _context.HabitLists.AddRangeAsync(new List<HabitList>
-			{
-				new HabitList
-				{
-					CreatedOn = now,
-					Title = "Daily",
-					UserId = command.UserId
-				},
-				new HabitList
-				{
-					CreatedOn = now,
-					Title = "Weekly",
-					UserId = command.UserId
-				}
-			});
-			await _context.SaveChangesAsync(cancellationToken);
-			
 			return user;
 		}
 	}

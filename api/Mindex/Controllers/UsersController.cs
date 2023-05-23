@@ -4,7 +4,7 @@ using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Mindex.Controllers
+namespace GoldenIslandGang.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
@@ -17,13 +17,7 @@ namespace Mindex.Controllers
 			_mediator = mediator;
 		}
 
-		[HttpGet("{userId}")]
-		public async Task<UserDto> GetUser(string userId)
-		{
-			return await _mediator.Send(new GetUserQuery { UserId = new Guid(userId) });
-		}
-
-		[HttpPost("new")]
+		[HttpPost("register")]
 		public async Task<ActionResult<User>> CreateUser(CreateUserCommand command)
 		{
 			var user = await _mediator.Send(command);

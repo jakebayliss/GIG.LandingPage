@@ -1,7 +1,4 @@
-﻿using MediatR.Pipeline;
-using Microsoft.Extensions.Logging;
-
-namespace Application.Common.Behaviours;
+﻿namespace Application.Common.Behaviours;
 
 public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
@@ -16,6 +13,6 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
     {
         var requestName = typeof(TRequest).Name;
 
-        _logger.LogInformation("Mindex Request: {Name} {@Request}", requestName, request);
+        _logger.LogInformation("GIG Request: {Name} {@Request}", requestName, request);
     }
 }

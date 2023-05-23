@@ -30,39 +30,4 @@ public class ApplicationDbContextInitialiser
 			throw;
 		}
 	}
-
-	public async Task SeedAsync()
-	{
-		try
-		{
-			await TrySeedAsync();
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "An error occurred while seeding the database.");
-			throw;
-		}
-	}
-
-	public async Task TrySeedAsync()
-	{
-		// Default data
-		// Seed, if necessary
-		if (!_context.HabitLists.Any())
-		{
-			_context.HabitLists.Add(new HabitList
-			{
-				Title = "Todo List",
-				Habits =
-				{
-					new Habit { Title = "Make a todo list 📃" },
-					new Habit { Title = "Check off the first item ✅" },
-					new Habit { Title = "Realise you've already done two things on the list! 🤯"},
-					new Habit { Title = "Reward yourself with a nice, long nap 🏆" },
-				}
-			});
-
-			await _context.SaveChangesAsync();
-		}
-	}
 }

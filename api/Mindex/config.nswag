@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
-      "project": "Mindex.csproj",
+      "project": "GoldenIslandGang.csproj",
       "msBuildProjectExtensionsPath": null,
       "configuration": null,
       "runtime": null,
