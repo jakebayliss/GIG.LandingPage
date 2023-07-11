@@ -1,5 +1,4 @@
 ﻿using Application.Users.Commands.CreateUser;
-using Application.Users.Queries.CheckUserExists;
 using Domain.Entities;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

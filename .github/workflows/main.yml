@@ -1,0 +1,133 @@
+name: GIG CI
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  DOTNET_VERSION: 7.0.x
+  NODE_VERSION: latest
+  RESOURCE_GROUP: goldenislandswim
+
+jobs:
+  buildIAC:
+    runs-on: ubuntu-latest
+    name: 'Build IAC'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - name: Build Bicep
+        shell: pwsh
+        run: .github/build.ps1
+        
+      - name: Bicep What-If
+        shell: pwsh
+        run: .github/deploy.ps1 -resourceGroup '${{ env.RESOURCE_GROUP }}' -sqlAdministratorLoginPassword ${{ secrets.SQLADMINPASSWORD }}
+      
+      - name: Clean Bicep
+        shell: pwsh
+        run: .github/clean.ps1
+  
+  buildApi:
+    runs-on: windows-latest
+    name: 'Build Api'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup DotNet - ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build Api
+        shell: pwsh
+        run: |
+          pushd './api/GoldenIslandGang'
+          dotnet build --configuration Release --output ../build
+          popd
+
+      - name: Upload Artifact - Api
+        uses: actions/upload-artifact@v3
+        with:
+          name: api-drop
+          path: ./api/build
+          if-no-files-found: error
+  
+  buildApp:
+    runs-on: windows-latest
+    name: 'Build App'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js - ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: './app/package-lock.json'
+          
+      - name: Install dependencies
+        run: npm ci
+        working-directory: ./app
+        
+      - name: npm build
+        run: npm run build --if-present
+        working-directory: ./app
+
+      - name: Upload Artifact - App
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-drop
+          path: ./app/.next
+          if-no-files-found: error
+
+  deploy:
+    runs-on: windows-latest
+    name: 'Deploy'
+    needs: [buildIAC,buildApi,buildApp]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: Azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+
+      - name: Bicep Deploy
+        shell: pwsh
+        run: .github/deploy.ps1 -resourceGroup '${{ env.RESOURCE_GROUP }}' -sqlAdministratorLoginPassword ${{ secrets.SQLADMINPASSWORD }} -deploy
+
+      - name: Download Artifact - Api
+        uses: actions/download-artifact@v3
+        with:
+          name: api-drop
+          path: ./api-drop
+      
+      - name: Deploy Api
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: 'goldenislandswim-api'
+          package: ./api-drop
+
+      - name: Download Artifact - App
+        uses: actions/download-artifact@v3
+        with:
+          name: app-drop
+          path: ./app-drop/_next
+
+      - name: Deploy App
+        uses: azure/webapps-deploy@v2
+        with: 
+          app-name: 'goldenislandswim'
+          package: ./app-drop

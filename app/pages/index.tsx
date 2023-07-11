@@ -1,11 +1,32 @@
+import { useEffect, useState } from 'react';
+import { CreateUserCommand, UsersClient } from '@/api-client';
 import Image from 'next/image';
 
+import { BASE_API_URL } from '../config';
+
 const Index = () => {
+
+  const [usersClient, setUsersClient] = useState<UsersClient | undefined>(undefined);
+  const [name, setName] = useState<string>();
+  const [email, setEmail] = useState<string>();
+  
+  useEffect(() => {
+    (async () => {
+      setUsersClient(new UsersClient(BASE_API_URL));
+    })();
+  }, []);
 
   const handleScroll = (tag: string) => {
     const element = document.getElementById(tag);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  const handleRegistration = async () => {
+    if (usersClient) {
+      const user = await usersClient.createUser(new CreateUserCommand({ name, email }));
+      console.log(user);
     }
   }
 
@@ -31,13 +52,16 @@ const Index = () => {
         <h4 className='text-center font-bold text-xl m-6'>Golden Island Gang VIP Signup</h4>
         <div className="flex flex-col justify-center w-full self-center max-w-[468px]">
           <label>Name</label>
-          <input type="text" className="p-2 shadow-lg rounded-sm outline-none"/>
+          <input type="text" className="p-2 shadow-lg rounded-sm outline-none" value={name} onChange={(e) => setName(e.target.value)}/>
         </div>
         <div className="flex flex-col justify-center w-full self-center max-w-[468px]">
           <label>Email</label>
-          <input type="text" className="p-2 shadow-lg rounded-sm outline-none"/>
+          <input type="text" className="p-2 shadow-lg rounded-sm outline-none" value={email} onChange={(e) => setEmail(e.target.value)}/>
         </div>
-        <button className="bg-pink-300 rounded-md py-2 px-5 text-center flex self-center m-5 shadow-md text-white hover:bg-pink-400">Sign Up</button>
+        <button className="bg-pink-300 rounded-md py-2 px-5 text-center flex self-center m-5 shadow-md text-white hover:bg-pink-400" 
+          onClick={() => handleRegistration()}>
+            Sign Up
+        </button>
       </div>
       <div className='text-center py-10 '>
         <p className='launch-title val text-transparent'>Chat soon x</p>
