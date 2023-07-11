@@ -4,7 +4,7 @@
 
 :root {
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 226, 250, 255;
+  --background-start-rgb: 255, 255, 255;
   --background-end-rgb: 255, 255, 255;
 }
 
@@ -31,11 +31,19 @@ body {
   src: url("../assets/VAL.otf") format("opentype");
 }
 
+.banner {
+  background-image: url("../public/stanley-dai-ovanKMhLYec-unsplash.jpg");
+  background-color: #cccccc;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: grayscale(40%);
+}
 .val {
   font-family: 'VAL';
 }
 
 .launch-title {
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: white;
+  -webkit-text-stroke-color: black;
 }

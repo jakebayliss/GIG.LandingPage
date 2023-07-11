@@ -1,33 +1,50 @@
 import Image from 'next/image';
 
 const Index = () => {
+
+  const handleScroll = (tag: string) => {
+    const element = document.getElementById(tag);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   return (
-    <main className="py-32 md:p-32 lg:p-40">
-      <Image src='/stanley-dai-ovanKMhLYec-unsplash.jpg' alt="GIG BABY" width={2000} height={350} className='h-[200px] lg:h-[350px]'style={{position: 'absolute', left: 0, top: 0, objectFit: 'cover', zIndex: -10}}/>
-      <div className="flex flex-col items-center justify-center bg-pink-300 py-10 lg:py-20" >
-        {/* <Image src='/logo.png' alt="GIG BABY" width={300} height={300} className='mb-10' /> */}
-        <h1 className="launch-title val text-transparent text-3xl md:text-4xl lg:text-7xl">GOLDEN ISLAND GANG</h1>
+    <main>
+      <div className='flex justify-center p-3'>
+        <h1 className="launch-title val text-transparent text-3xl md:text-4xl lg:text-5xl">GOLDEN ISLAND GANG</h1>
       </div>
-      <h3 className="val text-center p-5 text-pink-300 text-xl md:text-3xl">LAUNCH DAY COMING SOON</h3>
-      <div className="text-center py-5 px-10 max-w-screen-md m-auto">
-        <p>Hey Gorgeous!</p>
-        <p>Make a splash with the debut of our exciting new bikini range. Get ready to be part of our special journey as we unveil our first ever collection. Sign up now for VIP access to all the juicy details and launch information. See you on the beach, babe!</p>
+      <div className='banner flex justify-center items-center h-[100px] md:h-[200px] lg:h-[300px]'>
+        <h3 className="text-center p-5 text-white font-bold text-2xl md:text-5xl lg:text-7xl">LAUNCH DAY COMING SOON</h3>
       </div>
-      <div className="flex flex-col align-middle py-5 px-10 gap-3">
-        <div className="flex flex-col justify-center w-full self-center lg:max-w-[468px]">
+      <div className="flex flex-col text-center py-10 md:py-14 px-10 max-w-screen-md m-auto">
+        <h4 className='m-8 font-bold'>Hey Gorgeous!</h4>
+        <p>Make a splash with the debut of our exciting new bikini range. Get ready to be part of our special journey as we unveil our first ever collection. Sign up now for VIP access to all the juicy details and launch information.</p>
+        <p> See you on the beach, babe!</p>
+        <button className="bg-pink-300 rounded-md py-2 px-5 text-center flex self-center m-8 shadow-md text-white hover:bg-pink-400" onClick={() => handleScroll('signup')}>Hell yes to VIP access</button>
+      </div>
+      <div className='flex flex-col justify-center items-center m-8 text-slate-800 hover:underline hover:text-slate-900'>
+        <a href='https://instagram.com/goldenislandswim' target='_blank'>Visit us on Instagram!</a>
+      </div>
+      <Image src='/goldenislandgangpink.png' alt="GIG BABY" width={2000} height={350} className='h-[200px] lg:h-[350px]'style={{objectFit: 'cover', zIndex: -10}}/>
+      <div id="signup" className="flex flex-col justify-center py-5 px-10 gap-3 h-[80vh] md">
+        <h4 className='text-center font-bold text-xl m-6'>Golden Island Gang VIP Signup</h4>
+        <div className="flex flex-col justify-center w-full self-center max-w-[468px]">
           <label>Name</label>
           <input type="text" className="p-2 shadow-lg rounded-sm outline-none"/>
         </div>
-        <div className="flex flex-col justify-center w-full self-center lg:max-w-[468px]">
+        <div className="flex flex-col justify-center w-full self-center max-w-[468px]">
           <label>Email</label>
           <input type="text" className="p-2 shadow-lg rounded-sm outline-none"/>
         </div>
-        <button className="bg-pink-300 rounded-md py-2 px-5 text-center flex self-center m-5 shadow-md hover:bg-pink-400">Sign Up</button>
+        <button className="bg-pink-300 rounded-md py-2 px-5 text-center flex self-center m-5 shadow-md text-white hover:bg-pink-400">Sign Up</button>
       </div>
       <div className='text-center py-10 '>
-        <p>Let's link up!</p>
+        <p className='launch-title val text-transparent'>Chat soon x</p>
       </div>
-      <Image src='/footerimg.png' alt="GIG BABY" width={1440} height={100} style={{position: 'absolute', left: 0, bottom: -200, height: '100px', objectFit: 'cover', zIndex: -10}}/>
+      <div>
+        <p className='text-center'>Made by Jake</p>
+      </div>
     </main>
   )
 }
