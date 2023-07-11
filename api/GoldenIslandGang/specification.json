@@ -30,7 +30,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/UserDto"
                 }
               }
             }
@@ -41,23 +41,18 @@
   },
   "components": {
     "schemas": {
-      "User": {
+      "UserDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
           "name": {
             "type": "string"
           },
           "email": {
             "type": "string"
           },
-          "createdOn": {
-            "type": "string",
-            "format": "date-time"
+          "alreadyExists": {
+            "type": "boolean"
           }
         }
       },

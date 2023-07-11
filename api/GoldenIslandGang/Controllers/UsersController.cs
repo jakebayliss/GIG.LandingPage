@@ -17,7 +17,7 @@ namespace GoldenIslandGang.Controllers
 		}
 
 		[HttpPost("register")]
-		public async Task<ActionResult<User>> CreateUser(CreateUserCommand command)
+		public async Task<ActionResult<UserDto>> CreateUser(CreateUserCommand command)
 		{
 			var user = await _mediator.Send(command);
 			return Ok(user);
