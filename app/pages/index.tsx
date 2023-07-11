@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CreateUserCommand, UsersClient } from '@/api-client';
+import { CreateUserCommand, UserDto, UsersClient } from '@/api-client';
 import Image from 'next/image';
 
 import { BASE_API_URL } from '../config';
@@ -7,8 +7,10 @@ import { BASE_API_URL } from '../config';
 const Index = () => {
 
   const [usersClient, setUsersClient] = useState<UsersClient | undefined>(undefined);
+  const [user, setUser] = useState<UserDto>();
   const [name, setName] = useState<string>();
   const [email, setEmail] = useState<string>();
+  const [loading, setLoading] = useState<boolean>(false);
   
   useEffect(() => {
     (async () => {
@@ -25,8 +27,10 @@ const Index = () => {
 
   const handleRegistration = async () => {
     if (usersClient) {
+      setLoading(true);
       const user = await usersClient.createUser(new CreateUserCommand({ name, email }));
-      console.log(user);
+      setUser(user);
+      setLoading(false);
     }
   }
 

@@ -10,7 +10,7 @@
 
 export interface IUsersClient {
 
-    createUser(command: CreateUserCommand): Promise<User>;
+    createUser(command: CreateUserCommand): Promise<UserDto>;
 }
 
 export class UsersClient implements IUsersClient {
@@ -23,7 +23,7 @@ export class UsersClient implements IUsersClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    createUser(command: CreateUserCommand): Promise<User> {
+    createUser(command: CreateUserCommand): Promise<UserDto> {
         let url_ = this.baseUrl + "/api/Users/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -43,14 +43,14 @@ export class UsersClient implements IUsersClient {
         });
     }
 
-    protected processCreateUser(response: Response): Promise<User> {
+    protected processCreateUser(response: Response): Promise<UserDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = User.fromJS(resultData200);
+            result200 = UserDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -58,17 +58,16 @@ export class UsersClient implements IUsersClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<User>(null as any);
+        return Promise.resolve<UserDto>(null as any);
     }
 }
 
-export class User implements IUser {
-    id?: number;
+export class UserDto implements IUserDto {
     name?: string;
     email?: string;
-    createdOn?: Date;
+    alreadyExists?: boolean;
 
-    constructor(data?: IUser) {
+    constructor(data?: IUserDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -79,35 +78,32 @@ export class User implements IUser {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.name = _data["name"];
             this.email = _data["email"];
-            this.createdOn = _data["createdOn"] ? new Date(_data["createdOn"].toString()) : <any>undefined;
+            this.alreadyExists = _data["alreadyExists"];
         }
     }
 
-    static fromJS(data: any): User {
+    static fromJS(data: any): UserDto {
         data = typeof data === 'object' ? data : {};
-        let result = new User();
+        let result = new UserDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["name"] = this.name;
         data["email"] = this.email;
-        data["createdOn"] = this.createdOn ? this.createdOn.toISOString() : <any>undefined;
+        data["alreadyExists"] = this.alreadyExists;
         return data;
     }
 }
 
-export interface IUser {
-    id?: number;
+export interface IUserDto {
     name?: string;
     email?: string;
-    createdOn?: Date;
+    alreadyExists?: boolean;
 }
 
 export class CreateUserCommand implements ICreateUserCommand {
